@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Delivery Person</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>    
+    <header>
+        <div class="wrapper">
+            <h1 data-text="Delivery•Person">Delivery•Person</h1>
+            <h2 data-text="HueMon">Any Where, Any Time, Any Place !!!</h2>
+        </div>
+
+        <div class="icon-container">
+            <a href="https://twitter.com/DeliveryPerson_" target="_blank">
+                <img src="images/twittericon.png" alt="Twitter" class="icon twitter-icon">
+            </a>
+        </div>
+    </header>
+
+    
+
+    <main>
+      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/2621168/bg.svg" alt="background" class="main-background">
+      
+      <!-- Move moon-logo outside of scene, but keep it before the scene in the DOM order -->
+      <div class="moon-logo">
+          <img src="images/RuneLogo.png" alt="Runes Logo" class="runes-logo">
+      </div>
+      
+      <div class="scene">
+          <img src="mountain-background.png" alt="Mountain Background" class="background">
+      </div>
+      
+      <div class="graph-container">
+          <div class="graph"></div>
+      </div>
+  </main>
+  
+  <div id="animationContainer">
+      <img src="images/DPB.png" alt="Delivery Person" id="deliveryPerson">
+  </div>
+    
+    <script>
+      // ... (keep the existing scroll effect and audio autoplay code) ...
+  
+      // Delivery person animation
+      const pathData = "M1765.947,636.591l41.8-24.5,41.8,44.92,74.887-63.977,64.438,55.81,56.07-80.312,43.2,43.559,70.485-43.559,75.807,43.559,83.6-70.783L2384.2,568.53l129.682-140.364L2643.7,549.473l90.562-62.616,111.46,106.175,125.393-96.646,106.235,84.4,67.921-39.475,59.213,27.224,57.472-27.224L3364.7,593.032l88.82-24.5,97.528,68.061,59.213-43.559,69.663,43.559V738.682H1765.947Z";
+      const points = pathData.split(/[,\s]/).filter(p => !isNaN(parseFloat(p))).map(parseFloat);
+  
+      document.addEventListener('DOMContentLoaded', function() {
+          const deliveryPerson = document.getElementById('deliveryPerson');
+          const container = document.getElementById('animationContainer');
+          
+          // Easily adjustable parameters
+          const speed = 1.75; // Pixels per frame, adjust as needed
+          const size = 350; // Size in pixels
+          const heightAdjustment = 800; // Pixels to move up, adjust this value to move higher or lower
+          
+          let position = 0;
+          const pathWidth = 1601.753; // Width of the path in the SVG
+          const pathHeight = 344.091; // Height of the path in the SVG
+  
+          // Set the size
+          document.documentElement.style.setProperty('--delivery-person-size', `${size}px`);
+  
+          function animateDeliveryPerson() {
+              position += speed;
+              if (position > window.innerWidth) {
+                  position = -size;
+              }
+              
+              // Find the closest point in the path
+              const pathPosition = (position / window.innerWidth) * pathWidth;
+              let closestIndex = 0;
+              let closestDistance = Infinity;
+              for (let i = 0; i < points.length; i += 2) {
+                  const distance = Math.abs(points[i] - pathPosition);
+                  if (distance < closestDistance) {
+                      closestDistance = distance;
+                      closestIndex = i;
+                  }
+              }
+              
+              // Calculate y position based on the path, with height adjustment
+              const y = window.innerHeight - (points[closestIndex + 1] / pathHeight * window.innerHeight) - heightAdjustment;
+              
+              deliveryPerson.style.left = `${position}px`;
+              deliveryPerson.style.top = `${y}px`;
+              
+              requestAnimationFrame(animateDeliveryPerson);
+          }
+  
+          animateDeliveryPerson();
+      });
+  </script>
+
+</body>
+</html>
